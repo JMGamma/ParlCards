@@ -1,0 +1,15 @@
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 animate-pulse">
+  <div class="space-y-6">
+    {% for _ in range(4) %}
+    <div>
+      <div class="flex justify-between mb-2">
+        <div class="h-3 bg-gray-200 rounded w-32"></div>
+        <div class="h-5 bg-gray-200 rounded w-12"></div>
+      </div>
+      <div class="h-3 bg-gray-200 rounded-full w-full"></div>
+      <div class="h-2 bg-gray-100 rounded w-24 mt-1 ml-auto"></div>
+    </div>
+    {% endfor %}
+  </div>
+  <p class="text-center text-xs text-gray-400 mt-4">Computing metrics…</p>
+</div>

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Browse MPs — ParlCards{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+  <h1 class="text-3xl font-black text-gray-900 mb-1">Browse MPs</h1>
+  <p class="text-gray-500">Ranked by {{ metric_meta.label }} · Session {{ session }}</p>
+</div>
+
+{# Metric tabs — full page nav to update URL and reset page to 1 #}
+<div class="flex flex-wrap gap-2 mb-5">
+  {% for m_key, m_meta in metrics_list.items() %}
+  <a href="/browse?metric={{ m_key }}&group={{ group }}"
+     class="text-sm px-4 py-2 rounded-full font-semibold border transition-colors
+            {% if metric == m_key %}bg-gray-900 text-white border-gray-900
+            {% else %}bg-white text-gray-500 border-gray-200 hover:border-gray-400{% endif %}">
+    {{ m_meta.label }}
+  </a>
+  {% endfor %}
+</div>
+
+<div id="browse-list">
+  {% include "partials/browse_list.html" %}
+</div>
+
+{% endblock %}

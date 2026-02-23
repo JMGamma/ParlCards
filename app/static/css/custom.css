@@ -1,0 +1,43 @@
+:root {
+  --color-liberal:      #D71920;
+  --color-conservative: #1A4782;
+  --color-ndp:          #F37021;
+  --color-bloc:         #00B0F0;
+  --color-green:        #3D9B35;
+  --color-independent:  #6B7280;
+}
+
+/* Stat bar grow animation */
+@keyframes grow-bar {
+  from { width: 0%; }
+  to   { width: var(--bar-target); }
+}
+
+.stat-bar {
+  animation: grow-bar 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Ensure stat-metric has consistent spacing */
+.stat-metric {
+  padding-bottom: 0;
+}
+
+/* Smooth card entrance */
+#card-metrics {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Search dropdown transition */
+#search-results:empty {
+  display: none;
+}
+
+/* Responsive image fallback */
+img[onerror] {
+  background-color: var(--color-independent);
+}

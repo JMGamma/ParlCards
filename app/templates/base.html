@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ParlCards{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            liberal:      '#D71920',
+            conservative: '#1A4782',
+            ndp:          '#F37021',
+            bloc:         '#00B0F0',
+            green:        '#3D9B35',
+            independent:  '#6B7280',
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/htmx.org@2.0.4" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+  <nav class="bg-white border-b border-gray-200 px-4 py-3">
+    <div class="max-w-4xl mx-auto flex items-center gap-4">
+      <a href="/" class="flex items-center gap-2 no-underline flex-shrink-0">
+        <span class="text-2xl font-black tracking-tight text-gray-900">Parl<span class="text-red-600">Cards</span></span>
+      </a>
+      <div class="relative" id="browse-menu">
+        <button onclick="document.getElementById('browse-dropdown').classList.toggle('hidden')"
+                class="text-sm font-semibold text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-1 flex-shrink-0">
+          Browse by metric
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div id="browse-dropdown"
+             class="hidden absolute left-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 z-50 py-1 min-w-[190px]">
+          <a href="/browse?metric=attendance"      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Voting Attendance</a>
+          <a href="/browse?metric=party_loyalty"   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Party Loyalty</a>
+          <a href="/browse?metric=bills_sponsored" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Bills Sponsored</a>
+          <a href="/browse?metric=debate_speeches" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Debate Participation</a>
+        </div>
+      </div>
+      <div class="flex-1 max-w-sm relative">
+        <input
+          type="search"
+          name="q"
+          placeholder="Search by name, riding, or province…"
+          autocomplete="off"
+          class="w-full px-4 py-1.5 text-sm rounded-xl border border-gray-200 focus:border-red-400 focus:outline-none bg-gray-50"
+          hx-get="/search"
+          hx-trigger="keyup changed delay:300ms, search"
+          hx-target="#nav-search-results"
+          hx-swap="innerHTML"
+        >
+        <div
+          id="nav-search-results"
+          class="absolute w-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden"
+        ></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="border-t border-gray-200 py-4 text-center text-xs text-gray-400">
+    Data provided by <a href="https://openparliament.ca" class="underline hover:text-gray-600" target="_blank" rel="noopener">openparliament.ca</a>
+  </footer>
+
+  <script>
+    document.addEventListener('click', function(e) {
+      var menu = document.getElementById('browse-menu');
+      if (menu && !menu.contains(e.target)) {
+        var dd = document.getElementById('browse-dropdown');
+        if (dd) dd.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

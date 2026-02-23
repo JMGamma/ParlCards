@@ -1,0 +1,39 @@
+{% if results %}
+<ul class="divide-y divide-gray-50">
+  {% for p in results %}
+  <li>
+    <a href="/politicians/{{ p.slug }}"
+       class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+      {% if p.image %}
+      <img src="{{ p.image }}" alt="{{ p.name }}"
+           class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+           style="border-color: var(--color-{{ p.party_slug }})"
+           onerror="this.style.display='none'">
+      {% else %}
+      <div class="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-sm text-white font-bold"
+           style="background-color: var(--color-{{ p.party_slug }})">
+        {{ p.name[0] }}
+      </div>
+      {% endif %}
+      <div class="min-w-0 flex-1">
+        <span class="font-medium text-gray-900 text-sm">{{ p.name }}</span>
+        <div class="flex items-center gap-2 mt-0.5">
+          <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white"
+                style="background-color: var(--color-{{ p.party_slug }})">
+            {{ p.party or "Ind." }}
+          </span>
+          {% if p.riding %}
+          <span class="text-xs text-gray-400 truncate">{{ p.riding }}{% if p.province %}, {{ p.province }}{% endif %}</span>
+          {% elif p.province %}
+          <span class="text-xs text-gray-400">{{ p.province }}</span>
+          {% endif %}
+        </div>
+      </div>
+      <svg class="w-4 h-4 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}

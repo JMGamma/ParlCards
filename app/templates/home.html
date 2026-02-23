@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}ParlCards — Canadian Politician Stat Cards{% endblock %}
+
+{% block content %}
+<div class="text-center mb-10 mt-4">
+  <h1 class="text-4xl font-black text-gray-900 mb-2">Find your MP</h1>
+  <p class="text-gray-500 text-lg">Voting attendance, party loyalty, bills, and debate participation for every Canadian MP.</p>
+</div>
+
+<div class="max-w-xl mx-auto relative mb-12">
+  <input
+    type="search"
+    name="q"
+    placeholder="Search by name, riding, or province…"
+    autocomplete="off"
+    class="w-full px-5 py-4 text-lg rounded-2xl border-2 border-gray-200 focus:border-red-400 focus:outline-none shadow-sm bg-white"
+    hx-get="/search"
+    hx-trigger="keyup changed delay:300ms, search"
+    hx-target="#search-results"
+    hx-swap="innerHTML"
+  >
+  <div
+    id="search-results"
+    class="absolute w-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 z-10 overflow-hidden"
+  ></div>
+</div>
+
+{# Browse by metric cards #}
+<div class="max-w-xl mx-auto mt-2 mb-8">
+  <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3 text-center">Browse by metric</p>
+  <div class="grid grid-cols-2 gap-3">
+    <a href="/browse?metric=attendance"
+       class="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 hover:shadow-md hover:border-gray-200 transition-all">
+      <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Voting Attendance</p>
+      <p class="text-sm text-gray-600">Who shows up to vote?</p>
+    </a>
+    <a href="/browse?metric=party_loyalty"
+       class="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 hover:shadow-md hover:border-gray-200 transition-all">
+      <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Party Loyalty</p>
+      <p class="text-sm text-gray-600">Who toes the party line?</p>
+    </a>
+    <a href="/browse?metric=bills_sponsored"
+       class="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 hover:shadow-md hover:border-gray-200 transition-all">
+      <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Bills Sponsored</p>
+      <p class="text-sm text-gray-600">Who's introducing legislation?</p>
+    </a>
+    <a href="/browse?metric=debate_speeches"
+       class="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 hover:shadow-md hover:border-gray-200 transition-all">
+      <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Debate Participation</p>
+      <p class="text-sm text-gray-600">Who's speaking in the House?</p>
+    </a>
+  </div>
+</div>
+
+<div class="text-center text-gray-400 text-sm">
+  <p>Start typing to search all current Members of Parliament.</p>
+  {% if available_sessions %}
+  <p class="mt-1">Data available for session{% if available_sessions | length > 1 %}s{% endif %}:
+    {{ available_sessions | join(", ") }}.</p>
+  {% endif %}
+</div>
+{% endblock %}

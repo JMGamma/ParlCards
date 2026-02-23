@@ -1,0 +1,74 @@
+{% macro stat_bar(label, display_value, percentile, unit="", sublabel="", na=false, distribution=none) %}
+<div class="stat-metric">
+  <div class="flex justify-between items-baseline mb-1">
+    <span class="text-xs font-semibold uppercase tracking-widest text-gray-400">{{ label }}</span>
+    <span class="text-2xl font-black text-gray-900">
+      {% if na %}
+        <span class="text-base text-gray-400 font-normal">N/A</span>
+      {% else %}
+        {{ display_value }}{% if unit %}<span class="text-sm font-normal text-gray-500 ml-0.5">{{ unit }}</span>{% endif %}
+      {% endif %}
+    </span>
+  </div>
+
+  {% if sublabel %}
+  <p class="text-xs text-gray-400 -mt-1 mb-1">{{ sublabel }}</p>
+  {% endif %}
+
+  {% if not na and distribution is not none and percentile is not none %}
+    {# Spark histogram: each bucket is a gray bar; this MP's bucket is color-coded #}
+    {% set buckets = distribution.buckets %}
+    {% set mp_bucket = distribution.mp_bucket %}
+    {% set max_count = buckets | max %}
+    {# Format min/max labels: whole numbers as int, floats to 1dp, append unit as-is #}
+    {% set lo_fmt = distribution.lo | int if distribution.lo == distribution.lo | int else distribution.lo | round(1) %}
+    {% set hi_fmt = distribution.hi | int if distribution.hi == distribution.hi | int else distribution.hi | round(1) %}
+    {% set lo_label = lo_fmt | string + unit %}
+    {% set hi_label = hi_fmt | string + unit %}
+    <svg viewBox="0 0 200 40" class="w-full" preserveAspectRatio="none" style="height:40px;display:block;">
+      {% for count in buckets %}
+        {% set bar_h = [((count / max_count) * 38) | round | int, 2] | max %}
+        {% set bw = 200 / (buckets | length) %}
+        {% set x = loop.index0 * bw %}
+        {% set y = 40 - bar_h %}
+        <rect
+          x="{{ x + 0.75 }}"
+          y="{{ y }}"
+          width="{{ bw - 1.5 }}"
+          height="{{ bar_h }}"
+          fill="{{ bar_color(percentile) if loop.index0 == mp_bucket else '#E5E7EB' }}"
+          rx="1.5"
+        />
+      {% endfor %}
+    </svg>
+    <div class="flex justify-between text-xs text-gray-400 mt-0.5">
+      <span>{{ lo_label }}</span>
+      <span>{{ ordinal(percentile) }} percentile</span>
+      <span>{{ hi_label }}</span>
+    </div>
+
+  {% elif na %}
+    {# Independent MP — no party loyalty data #}
+    <div class="relative h-2.5 bg-gray-100 rounded-full overflow-hidden">
+      <div class="h-full rounded-full bg-gray-200" style="width: 50%;"></div>
+    </div>
+    <div class="text-right text-xs text-gray-400 mt-1">Independent — no party to compare</div>
+
+  {% elif percentile is not none %}
+    {# Fallback bar — shown when distributions aren't yet available #}
+    <div class="relative h-2.5 bg-gray-100 rounded-full overflow-hidden">
+      <div class="stat-bar h-full rounded-full"
+           style="--bar-target: {{ percentile }}%; background-color: {{ bar_color(percentile) }};"></div>
+    </div>
+    <div class="text-right text-xs text-gray-400 mt-1">{{ ordinal(percentile) }} percentile</div>
+
+  {% else %}
+    {# Rankings not yet computed #}
+    <div class="relative h-2.5 bg-gray-100 rounded-full overflow-hidden">
+      <div class="h-full rounded-full bg-gray-200" style="width: 50%;"></div>
+    </div>
+    <div class="text-right text-xs text-gray-400 mt-1">Rankings loading…</div>
+  {% endif %}
+
+</div>
+{% endmacro %}

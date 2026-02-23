@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}{{ politician.name }} — ParlCards{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto">
+
+  <!-- Politician header — renders immediately -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4">
+    <div class="flex items-center gap-5">
+      {% if politician.image %}
+      <img
+        src="{{ politician.image }}"
+        alt="{{ politician.name }}"
+        class="w-20 h-20 rounded-full object-cover border-4 flex-shrink-0"
+        style="border-color: var(--color-{{ politician.party_slug }})"
+        onerror="this.style.display='none'"
+      >
+      {% else %}
+      <div class="w-20 h-20 rounded-full flex-shrink-0 flex items-center justify-center text-2xl text-white font-bold"
+           style="background-color: var(--color-{{ politician.party_slug }})">
+        {{ politician.name[0] }}
+      </div>
+      {% endif %}
+
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold text-gray-900 leading-tight">{{ politician.name }}</h1>
+        <div class="mt-1">
+          <span class="inline-block text-xs font-semibold px-2 py-1 rounded text-white"
+                style="background-color: var(--color-{{ politician.party_slug }})">
+            {{ politician.party or "Independent" }}
+          </span>
+        </div>
+        {% if politician.riding %}
+        <p class="text-sm text-gray-500 mt-1 truncate">{{ politician.riding }}{% if politician.province %}, {{ politician.province }}{% endif %}</p>
+        {% endif %}
+        <p class="text-xs text-gray-400 mt-0.5">Session {{ session }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metrics card — loaded lazily via HTMX -->
+  <div
+    id="card-metrics"
+    hx-get="/api/card/{{ slug }}"
+    hx-trigger="load"
+    hx-swap="outerHTML"
+  >
+    {% include "partials/loading.html" %}
+  </div>
+
+  <!-- Back link -->
+  <div class="text-center mt-6">
+    <a href="/" class="text-sm text-gray-400 hover:text-gray-600 underline">← Search another MP</a>
+  </div>
+
+</div>
+{% endblock %}

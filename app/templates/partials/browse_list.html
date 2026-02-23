@@ -1,0 +1,128 @@
+{# Group filter buttons — inside the HTMX swap target so active state re-renders correctly #}
+{% set groups = [("all", "All MPs"), ("government", "Government"), ("opposition", "Opposition")] %}
+<div class="flex items-center gap-2 flex-wrap mb-6">
+  <span class="text-xs font-semibold uppercase tracking-widest text-gray-400 mr-1">Show:</span>
+  {% for g_key, g_label in groups %}
+  <button
+    hx-get="/api/browse?metric={{ metric }}&group={{ g_key }}&page=1"
+    hx-target="#browse-list"
+    hx-swap="innerHTML"
+    class="text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors
+           {% if group == g_key %}bg-gray-900 text-white border-gray-900
+           {% else %}bg-white text-gray-500 border-gray-200 hover:border-gray-400{% endif %}">
+    {{ g_label }}
+  </button>
+  {% endfor %}
+</div>
+
+{% if not rankings_available %}
+<p class="text-center text-gray-400 py-12">Rankings are being computed — check back in a few minutes.</p>
+
+{% elif not rows %}
+<p class="text-center text-gray-400 py-12">No MPs found for this group.</p>
+
+{% else %}
+
+<p class="text-xs text-gray-400 mb-3">{{ total }} MPs · Page {{ page }} of {{ total_pages }}</p>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-50">
+  {% for row in rows %}
+  <a href="/politicians/{{ row.slug }}"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    {# Rank number #}
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#{{ row.rank }}</span>
+
+    {# Photo or initial fallback #}
+    {% if row.image %}
+    <img src="{{ row.image }}" alt="{{ row.name }}"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-{{ row.party_slug }})"
+         onerror="this.style.display='none'">
+    {% else %}
+    <div class="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-sm text-white font-bold"
+         style="background-color: var(--color-{{ row.party_slug }})">
+      {{ row.name[0] }}
+    </div>
+    {% endif %}
+
+    {# Name + party badge + riding #}
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">{{ row.name }}</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-{{ row.party_slug }})">
+          {{ row.party or "Ind." }}
+        </span>
+        {% if row.riding %}
+        <span class="text-xs text-gray-400 truncate">{{ row.riding }}{% if row.province %}, {{ row.province }}{% endif %}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    {# Metric value + mini bar + percentile #}
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      {% if row.value is not none %}
+        {% if metric_meta.decimals == 0 %}
+          <span class="text-sm font-black text-gray-900">{{ row.value }}{{ metric_meta.unit }}</span>
+        {% else %}
+          <span class="text-sm font-black text-gray-900">{{ row.value | round(1) }}{{ metric_meta.unit }}</span>
+        {% endif %}
+        {% if row.percentile is not none %}
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: {{ row.percentile }}%; background-color: {{ bar_color(row.percentile) }};"></div>
+          </div>
+          <span class="text-xs text-gray-400">{{ ordinal(row.percentile) }}</span>
+        </div>
+        {% endif %}
+      {% else %}
+        <span class="text-xs text-gray-400">N/A</span>
+      {% endif %}
+    </div>
+
+  </a>
+  {% endfor %}
+</div>
+
+{# Pagination controls — prev/next + first/last #}
+{% set btn_class = "text-sm px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-gray-400 transition-colors" %}
+{% set btn_disabled_class = "text-sm px-3 py-2 rounded-xl border border-gray-100 text-gray-300 cursor-default" %}
+<div class="flex justify-between items-center mt-4 gap-2">
+
+  {# Left side: First + Previous #}
+  <div class="flex gap-1.5">
+    {% if page > 1 %}
+    <button hx-get="/api/browse?metric={{ metric }}&group={{ group }}&page=1"
+            hx-target="#browse-list" hx-swap="innerHTML"
+            class="{{ btn_class }}">« First</button>
+    <button hx-get="/api/browse?metric={{ metric }}&group={{ group }}&page={{ page - 1 }}"
+            hx-target="#browse-list" hx-swap="innerHTML"
+            class="{{ btn_class }}">‹ Prev</button>
+    {% else %}
+    <span class="{{ btn_disabled_class }}">« First</span>
+    <span class="{{ btn_disabled_class }}">‹ Prev</span>
+    {% endif %}
+  </div>
+
+  <span class="text-xs text-gray-400 flex-shrink-0">{{ page }} / {{ total_pages }}</span>
+
+  {# Right side: Next + Last #}
+  <div class="flex gap-1.5">
+    {% if page < total_pages %}
+    <button hx-get="/api/browse?metric={{ metric }}&group={{ group }}&page={{ page + 1 }}"
+            hx-target="#browse-list" hx-swap="innerHTML"
+            class="{{ btn_class }}">Next ›</button>
+    <button hx-get="/api/browse?metric={{ metric }}&group={{ group }}&page={{ total_pages }}"
+            hx-target="#browse-list" hx-swap="innerHTML"
+            class="{{ btn_class }}">Last »</button>
+    {% else %}
+    <span class="{{ btn_disabled_class }}">Next ›</span>
+    <span class="{{ btn_disabled_class }}">Last »</span>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endif %}
