@@ -1,13 +1,15 @@
 import glob
+import json
 import os
 import re
 import unicodedata
 
 from fastapi import APIRouter, Depends, Query, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 
 from app.api.client import ThrottledAPIClient
 from app.api.politicians import fetch_politician_list
+from app.cache.manager import CACHE_ROOT
 from app.config import settings
 from app.dependencies import get_client
 from app.templates_config import templates
@@ -46,6 +48,38 @@ def _available_sessions() -> list[str]:
         if m:
             sessions.append(m.group(1))
     return sorted(sessions)
+
+
+@router.get("/status")
+async def status() -> JSONResponse:
+    """Quick health/warmup status check — useful for verifying Railway deployment."""
+    status_file = CACHE_ROOT / "meta" / "warmup_status.json"
+    warmup: dict = {}
+    try:
+        if status_file.exists():
+            warmup = json.loads(status_file.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+
+    rankings_files = glob.glob(
+        os.path.join(settings.cache_dir, "computed", "rankings", "all_metrics_*.json")
+    )
+    card_files = list((CACHE_ROOT / "computed" / "politicians").glob("*/sessions/*.json"))
+
+    return JSONResponse({
+        "cache_dir": str(CACHE_ROOT.resolve()),
+        "session": settings.session,
+        "available_sessions": _available_sessions(),
+        "rankings_built": len(rankings_files),
+        "cards_cached": len(card_files),
+        "warmup": {
+            "rankings_complete": warmup.get("rankings_complete", False),
+            "completed_slugs": len(warmup.get("completed_slugs", [])),
+            "failed_slugs": len(warmup.get("failed_slugs", [])),
+            "last_updated": warmup.get("last_updated", "never"),
+            "total_api_requests": warmup.get("total_api_requests", 0),
+        },
+    })
 
 
 @router.get("/", response_class=HTMLResponse)

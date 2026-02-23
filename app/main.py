@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
@@ -9,21 +10,31 @@ from app.cache.warmup import background_warmup
 from app.routers import home, politician, api as api_router, browse as browse_router
 from app.templates_config import templates
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
+log = logging.getLogger("parlcards")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    log.info("ParlCards starting up")
     # Startup: create the shared API client
     client = ThrottledAPIClient()
     await client.start()
     app.state.client = client
 
     # Start background warmup (non-blocking)
+    log.info("Launching background warmup task")
     warmup_task = asyncio.create_task(background_warmup(client))
     app.state.warmup_task = warmup_task
 
     yield
 
     # Shutdown: cancel warmup task and close connection pool
+    log.info("ParlCards shutting down")
     warmup_task.cancel()
     try:
         await warmup_task

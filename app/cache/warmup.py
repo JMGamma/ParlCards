@@ -7,6 +7,7 @@ resumes after server restarts rather than starting over.
 """
 import asyncio
 import json
+import logging
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -17,6 +18,8 @@ from app.api.speeches import fetch_politician_speeches
 from app.api.bills import fetch_sponsored_bills
 from app.cache.manager import CACHE_ROOT
 from app.config import settings
+
+log = logging.getLogger("parlcards.warmup")
 
 STATUS_FILE = CACHE_ROOT / "meta" / "warmup_status.json"
 
@@ -59,16 +62,21 @@ async def background_warmup(client: ThrottledAPIClient) -> None:
     the rendered cards always reflect fresh computations.
     """
     session = settings.session
+    log.info("Warmup started — session %s, cache_dir=%s", session, CACHE_ROOT)
 
     # Resume raw data fetch progress from previous run (avoids redundant API calls)
     status = load_warmup_status()
     completed: set[str] = set(status.get("completed_slugs", []))
     failed: set[str] = set(status.get("failed_slugs", []))
+    log.info("Resuming warmup: %d already completed, %d previously failed", len(completed), len(failed))
 
     try:
         # Fetch shared data (reads from disk cache if fresh)
         politicians = await fetch_politician_list(client)
+        log.info("Politician list loaded: %d MPs", len(politicians))
+
         session_votes = await fetch_session_votes(client, session)
+        log.info("Session votes loaded: %d votes", len(session_votes))
 
         # Always rebuild card cache for current session — delete existing files first
         session_cards = list(
@@ -79,12 +87,14 @@ async def background_warmup(client: ThrottledAPIClient) -> None:
                 f.unlink()
             except OSError:
                 pass
+        log.info("Cleared %d stale card cache files for session %s", len(session_cards), session)
 
         # Fetch raw per-MP data (skips MPs already completed in a previous run)
         remaining = [
             p for p in politicians
             if p["slug"] not in completed and p["slug"] not in failed
         ]
+        log.info("%d MPs remaining to fetch (of %d total)", len(remaining), len(politicians))
 
         for i, politician in enumerate(remaining):
             slug = politician["slug"]
@@ -96,12 +106,16 @@ async def background_warmup(client: ThrottledAPIClient) -> None:
                     fetch_sponsored_bills(client, slug, session),
                 )
                 completed.add(slug)
-            except Exception:
+            except Exception as e:
+                log.warning("Failed to fetch data for %s: %s", slug, e)
                 failed.add(slug)
 
-            # Save progress every 10 MPs
+            # Log progress and save every 10 MPs
             if i % 10 == 0:
+                log.info("Warmup progress: %d/%d fetched (%d failed)", i + 1, len(remaining), len(failed))
                 save_warmup_status(completed, failed)
+
+        log.info("Raw data fetch complete: %d succeeded, %d failed", len(completed), len(failed))
 
         # Build rankings table (all disk reads at this point)
         from app.metrics.percentiles import (
@@ -109,9 +123,13 @@ async def background_warmup(client: ThrottledAPIClient) -> None:
             compute_card_metrics_for_mp,
             cache_card_for_mp,
         )
+        log.info("Building rankings table...")
         rankings_table = await build_rankings_table(client, session)
+        log.info("Rankings table built: %d MPs", len(rankings_table.get("metrics", [])) if rankings_table else 0)
 
         # Build per-MP card cache (all disk reads — zero API calls)
+        log.info("Caching per-MP cards...")
+        cards_built = 0
         for politician in politicians:
             slug = politician["slug"]
             try:
@@ -120,10 +138,13 @@ async def background_warmup(client: ThrottledAPIClient) -> None:
                 )
                 if card_data:
                     cache_card_for_mp(slug, session, card_data)
-            except Exception:
-                pass  # This MP falls back to on-demand computation in /api/card/
+                    cards_built += 1
+            except Exception as e:
+                log.warning("Failed to cache card for %s: %s", slug, e)
 
+        log.info("Warmup complete: %d/%d cards cached", cards_built, len(politicians))
         save_warmup_status(completed, failed, rankings_complete=True)
 
-    except Exception:
+    except Exception as e:
+        log.exception("Warmup failed with unexpected error: %s", e)
         save_warmup_status(completed, failed)
