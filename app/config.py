@@ -22,8 +22,8 @@ class Settings(BaseSettings):
 
     recess_multiplier: float = 5.0
     free_vote_threshold: float = 0.3
-    rate_limit_per_minute: int = 10
-    min_delay_seconds: float = 6.0
+    rate_limit_per_minute: int = 60
+    min_delay_seconds: float = 1.0
 
 
 settings = Settings()
