@@ -356,6 +356,9 @@ def compute_percentiles_for_mp_by_group(
     return compute_percentiles_for_mp(slug, filtered_table)
 
 
+_INTEGER_METRICS = {"bills_sponsored", "debate_speeches"}
+
+
 def compute_distributions_for_mp(
     slug: str,
     table: dict,
@@ -366,6 +369,11 @@ def compute_distributions_for_mp(
 
     The table should already be filtered to the active comparison group
     (use filter_table_by_group() before calling this).
+
+    For integer-valued metrics (bills_sponsored, debate_speeches), bins are
+    discrete: one bin per possible integer value (0..max), so bin count =
+    max_value + 1 and every bar has the same width. For continuous metrics
+    (attendance, party_loyalty) the fixed num_buckets is used.
 
     Returns a dict of {metric: {"buckets": list[int], "mp_bucket": int} | None}.
     None is returned for a metric when the MP has no value (e.g. party_loyalty for
@@ -383,15 +391,24 @@ def compute_distributions_for_mp(
             continue
 
         lo, hi = min(all_vals), max(all_vals)
-        span = hi - lo or 1  # avoid division by zero when all values are identical
 
-        buckets = [0] * num_buckets
-        for v in all_vals:
-            idx = min(int((v - lo) / span * num_buckets), num_buckets - 1)
-            buckets[idx] += 1
-
-        mp_val = mp_metrics[metric]
-        mp_bucket = min(int((mp_val - lo) / span * num_buckets), num_buckets - 1)
+        if metric in _INTEGER_METRICS and int(hi) < num_buckets:
+            # Discrete binning: one bin per integer value 0..max (only when range fits)
+            hi_int = int(hi)
+            n = hi_int + 1  # bins for 0, 1, 2, ..., hi_int
+            buckets = [0] * n
+            for v in all_vals:
+                buckets[int(v)] += 1
+            mp_bucket = int(mp_metrics[metric])
+        else:
+            span = hi - lo or 1  # avoid division by zero when all values are identical
+            n = num_buckets
+            buckets = [0] * n
+            for v in all_vals:
+                idx = min(int((v - lo) / span * n), n - 1)
+                buckets[idx] += 1
+            mp_val = mp_metrics[metric]
+            mp_bucket = min(int((mp_val - lo) / span * n), n - 1)
 
         result[metric] = {"buckets": buckets, "mp_bucket": mp_bucket, "lo": lo, "hi": hi}
 

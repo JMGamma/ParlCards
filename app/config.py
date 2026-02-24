@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     # TTLs in seconds
     ttl_politician_list: int = 172800   # 48h
     ttl_politician_detail: int = 172800 # 48h
-    ttl_session_votes: int = 86400      # 24h
+    ttl_session_votes: int = 21600      # 6h — must be ≤ ttl_ballots to prevent attendance > 100%
     ttl_vote_detail: int = 315360000    # 10 years (permanent)
     ttl_ballots: int = 21600            # 6h
     ttl_speeches: int = 14400           # 4h
