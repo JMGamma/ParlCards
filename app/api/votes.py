@@ -49,10 +49,11 @@ async def fetch_politician_ballots(
         if stale is not None:
             return stale
 
-    # Fetch all ballots for this politician (no session filter)
+    # Fetch ballots filtered by session (filters by membership session, which is
+    # close enough — we still filter client-side by vote URL as a safety net)
     all_ballots = await client.paginate(
         "/votes/ballots/",
-        params={"politician": f"/politicians/{slug}/"},
+        params={"politician": f"/politicians/{slug}/", "session": session},
     )
 
     # Filter to only ballots where the vote URL belongs to the target session
