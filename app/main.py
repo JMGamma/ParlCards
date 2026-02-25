@@ -6,6 +6,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 
 from app.api.client import ThrottledAPIClient
+from app.cache.manager import CACHE_ROOT
 from app.cache.warmup import background_warmup
 from app.routers import home, politician, api as api_router, browse as browse_router
 from app.templates_config import templates
@@ -25,6 +26,8 @@ async def lifespan(app: FastAPI):
     client = ThrottledAPIClient()
     await client.start()
     app.state.client = client
+
+    log.info("Cache dir resolved to: %s", CACHE_ROOT.resolve())
 
     # Start background warmup (non-blocking)
     log.info("Launching background warmup task")
