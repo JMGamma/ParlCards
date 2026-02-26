@@ -129,28 +129,6 @@ async def build_rankings_table(
     politicians = await fetch_politician_list(client)
     session_votes = await fetch_session_votes(client, session)
 
-    # One-time backfill: generate summary files for MPs that were cached before
-    # this fix was applied (they have a full speech file but no summary file).
-    # Reads each full file once to extract the count — no API calls.
-    from app.cache.session import is_likely_recess
-    in_session = not is_likely_recess()
-    from app.api.speeches import _ensure_summary
-    import json as _json
-    for politician in politicians:
-        slug = politician["slug"]
-        summary_entry = cache_entry(f"raw/speeches/{slug}_{session}_summary.json")
-        full_entry = cache_entry(f"raw/speeches/{slug}_{session}.json")
-        if summary_entry.is_expired() and full_entry.path.exists():
-            # Full cache exists without a summary — generate it from disk
-            # Use read_stale() so we handle both fresh and expired full files
-            try:
-                stale = full_entry.read_stale()
-                if stale is not None:
-                    count = len(stale)
-                    _ensure_summary(slug, session, count, in_session)
-            except Exception:
-                pass  # Will fall back to stale-file path in fetch_speech_count()
-
     all_metrics: list[dict] = []
     failed: list[str] = []
 

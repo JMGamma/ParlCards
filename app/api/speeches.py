@@ -14,26 +14,24 @@ async def fetch_politician_speeches(
     the full (potentially large) speech cache file.
     """
     in_session = not is_likely_recess()
-    entry = cache_entry(f"raw/speeches/{slug}_{session}.json")
 
-    cached = entry.read()
-    if cached is not None:
-        # Opportunistically write summary if it's missing (e.g. cached before this fix)
-        _ensure_summary(slug, session, len(cached), in_session)
-        return cached
+    # Check summary cache first — we never store full speech text
+    summary_entry = cache_entry(f"raw/speeches/{slug}_{session}_summary.json")
+    cached_summary = summary_entry.read()
+    if cached_summary is not None:
+        return []  # Count is available via fetch_speech_count(); full text not stored
 
     speeches = await client.paginate(
         "/speeches/",
         params={"politician": f"/politicians/{slug}/", "session": session},
     )
+    count = len(speeches)
 
-    ttl = effective_ttl(settings.ttl_speeches, in_session)
-    entry.write(speeches, ttl_seconds=ttl, source_url=f"/speeches/?politician={slug}&session={session}")
+    # Only persist the count — full speech text is never used and averages 5 MB per MP.
+    # The summary file IS the cache; the full entry is never written.
+    _ensure_summary(slug, session, count, in_session)
 
-    # Always write summary alongside full cache
-    _ensure_summary(slug, session, len(speeches), in_session)
-
-    return speeches
+    return []  # Callers that need the count use fetch_speech_count()
 
 
 async def fetch_speech_count(

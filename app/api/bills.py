@@ -15,13 +15,23 @@ async def fetch_sponsored_bills(
     if cached is not None:
         return cached
 
-    bills = await client.paginate(
+    raw_bills = await client.paginate(
         "/bills/",
         params={
             "sponsor_politician": f"/politicians/{slug}/",
             "session": session,
         },
     )
+
+    # Slim to only the fields used by compute_bills_count()
+    bills = [
+        {
+            "number": b.get("number", ""),
+            "name": b.get("name"),
+            "introduced": b.get("introduced", ""),
+        }
+        for b in raw_bills
+    ]
 
     ttl = effective_ttl(settings.ttl_bills, in_session)
     entry.write(bills, ttl_seconds=ttl, source_url=f"/bills/?sponsor_politician={slug}&session={session}")

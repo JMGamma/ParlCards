@@ -15,7 +15,10 @@ async def fetch_session_votes(client: ThrottledAPIClient, session: str) -> list[
     if cached is not None:
         return cached
 
-    votes = await client.paginate("/votes/", params={"session": session})
+    raw_votes = await client.paginate("/votes/", params={"session": session})
+
+    # Slim to only the fields we use: date (for attendance start_date) and url (unused but useful for debugging)
+    votes = [{"date": v.get("date", ""), "url": v.get("url", "")} for v in raw_votes]
 
     ttl = effective_ttl(settings.ttl_session_votes, in_session)
     entry.write(votes, ttl_seconds=ttl, source_url=f"/votes/?session={session}")
@@ -58,9 +61,11 @@ async def fetch_politician_ballots(
 
     # Filter to only ballots where the vote URL belongs to the target session
     # Vote URLs look like: /votes/45-1/69/
+    # Also slim each record to only the two fields we actually use.
     session_prefix = f"/votes/{session}/"
     ballots = [
-        b for b in all_ballots
+        {"ballot": b.get("ballot"), "vote_url": b.get("vote_url")}
+        for b in all_ballots
         if (b.get("vote_url") or "").startswith(session_prefix)
     ]
 
@@ -80,9 +85,12 @@ async def fetch_vote_detail(
         return cached
 
     try:
-        detail = await client.get(f"/votes/{session}/{vote_number}/")
+        raw = await client.get(f"/votes/{session}/{vote_number}/")
     except Exception:
         return None
+
+    # Slim to only party_votes — the only field used by compute_party_loyalty()
+    detail = {"party_votes": raw.get("party_votes", [])}
 
     # Vote details are immutable — cache effectively forever
     entry.write(detail, ttl_seconds=settings.ttl_vote_detail, source_url=f"/votes/{session}/{vote_number}/")
