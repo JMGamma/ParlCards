@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     ttl_ballots: int = 21600            # 6h
     ttl_speeches: int = 14400           # 4h
     ttl_bills: int = 43200              # 12h
-    ttl_rankings: int = 21600           # 6h
+    ttl_rankings: int = 315360000        # 10 years — warmup owns invalidation on restart
 
     government_party: str = "Liberal"
 

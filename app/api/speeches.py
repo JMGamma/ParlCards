@@ -63,9 +63,11 @@ async def fetch_speech_count(
         _ensure_summary(slug, session, count, in_session)
         return count
 
-    # No cache at all — do full fetch (which also writes summary)
-    speeches = await fetch_politician_speeches(client, slug, session)
-    return len(speeches)
+    # No cache at all — do full fetch (which writes the summary as a side effect),
+    # then read the summary back rather than using the return value (which is always [])
+    await fetch_politician_speeches(client, slug, session)
+    cached = summary_entry.read()
+    return cached["speech_count"] if cached is not None else 0
 
 
 def _ensure_summary(slug: str, session: str, count: int, in_session: bool) -> None:
