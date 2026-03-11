@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse MPs — ParlCards</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            liberal:      '#D71920',
+            conservative: '#1A4782',
+            ndp:          '#F37021',
+            bloc:         '#00B0F0',
+            green:        '#3D9B35',
+            independent:  '#6B7280',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+  <nav class="bg-white border-b border-gray-200 px-4 py-3">
+    <div class="max-w-4xl mx-auto flex items-center gap-4">
+      <a href="/" class="flex items-center gap-2 no-underline flex-shrink-0">
+        <span class="text-2xl font-black tracking-tight text-gray-900">Parl<span class="text-red-600">Cards</span></span>
+      </a>
+      <div class="relative" id="browse-menu">
+        <button onclick="document.getElementById('browse-dropdown').classList.toggle('hidden')"
+                class="text-sm font-semibold text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-1 flex-shrink-0">
+          Browse by metric
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div id="browse-dropdown"
+             class="hidden absolute left-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 z-50 py-1 min-w-[190px]">
+          <a href="/browse/attendance/all/1/"      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Voting Attendance</a>
+          <a href="/browse/party_loyalty/all/1/"   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Party Loyalty</a>
+          <a href="/browse/bills_sponsored/all/1/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Bills Sponsored</a>
+          <a href="/browse/debate_speeches/all/1/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Debate Participation</a>
+        </div>
+      </div>
+      <div class="flex-1 max-w-sm relative">
+        <input
+          type="search"
+          name="q"
+          placeholder="Search by name, riding, or province…"
+          autocomplete="off"
+          class="search-input w-full px-4 py-1.5 text-sm rounded-xl border border-gray-200 focus:border-red-400 focus:outline-none bg-gray-50"
+          data-target="nav-search-results"
+        >
+        <div
+          id="nav-search-results"
+          class="absolute w-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden"
+        ></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
+    
+<div class="mb-6">
+  <h1 class="text-3xl font-black text-gray-900 mb-1">Browse MPs</h1>
+  <p class="text-gray-500">Ranked by Voting Attendance · Session 45-1</p>
+</div>
+
+
+<div class="flex flex-wrap gap-2 mb-5">
+  
+  <a href="/browse/attendance/all/1/"
+     class="text-sm px-4 py-2 rounded-full font-semibold border transition-colors
+            bg-gray-900 text-white border-gray-900
+            ">
+    Voting Attendance
+  </a>
+  
+  <a href="/browse/party_loyalty/all/1/"
+     class="text-sm px-4 py-2 rounded-full font-semibold border transition-colors
+            bg-white text-gray-500 border-gray-200 hover:border-gray-400">
+    Party Loyalty
+  </a>
+  
+  <a href="/browse/bills_sponsored/all/1/"
+     class="text-sm px-4 py-2 rounded-full font-semibold border transition-colors
+            bg-white text-gray-500 border-gray-200 hover:border-gray-400">
+    Bills Sponsored
+  </a>
+  
+  <a href="/browse/debate_speeches/all/1/"
+     class="text-sm px-4 py-2 rounded-full font-semibold border transition-colors
+            bg-white text-gray-500 border-gray-200 hover:border-gray-400">
+    Debate Participation
+  </a>
+  
+</div>
+
+<div id="browse-list">
+  
+
+<div class="flex items-center gap-2 flex-wrap mb-6">
+  <span class="text-xs font-semibold uppercase tracking-widest text-gray-400 mr-1">Show:</span>
+  
+  <a href="/browse/attendance/all/1/"
+     class="text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors
+            bg-gray-900 text-white border-gray-900
+            ">
+    All MPs
+  </a>
+  
+  <a href="/browse/attendance/government/1/"
+     class="text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors
+            bg-white text-gray-500 border-gray-200 hover:border-gray-400">
+    Government
+  </a>
+  
+  <a href="/browse/attendance/opposition/1/"
+     class="text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors
+            bg-white text-gray-500 border-gray-200 hover:border-gray-400">
+    Opposition
+  </a>
+  
+</div>
+
+
+
+<p class="text-xs text-gray-400 mb-3">340 MPs · Page 6 of 14</p>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-50">
+  
+  <a href="/politicians/giovanna-mingarelli/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#126</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/giovanna-mingarelli.jpg" alt="Giovanna Mingarelli"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Giovanna Mingarelli</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Prescott—Russell—Cumberland, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/juanita-nathan/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#127</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/juanita-nathan.jpg" alt="Juanita Nathan"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Juanita Nathan</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Pickering—Brooklin, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/chi-nguyen/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#128</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/chi-nguyen.jpg" alt="Chi Nguyen"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Chi Nguyen</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Spadina—Harbourfront, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/dominique-orourke/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#129</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/dominique-orourke.jpg" alt="Dominique O&#39;Rourke"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Dominique O&#39;Rourke</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Guelph, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/marcus-powlowski/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#130</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/marcus-powlowski_6wjwoUs.jpg" alt="Marcus Powlowski"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Marcus Powlowski</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Thunder Bay—Rainy River, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/aslam-rana/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#131</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/aslam-rana.jpg" alt="Aslam Rana"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Aslam Rana</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Hamilton Centre, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/pauline-rochefort/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#132</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/pauline-rochefort.jpg" alt="Pauline Rochefort"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Pauline Rochefort</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Nipissing—Timiskaming, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/ruby-sahota/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#133</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/ruby-sahota_3t3fY2F.jpg" alt="Ruby Sahota"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Ruby Sahota</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Brampton North—Caledon, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/kyle-seeback/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#134</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/kyle-seeback.jpg" alt="Kyle Seeback"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-conservative)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Kyle Seeback</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-conservative)">
+          Conservative
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Dufferin—Caledon, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/sonia-sidhu/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#135</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/sonia-sidhu_uShwhVR.jpg" alt="Sonia Sidhu"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Sonia Sidhu</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Brampton South, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/amandeep-sodhi/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#136</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/amandeep-sodhi.jpg" alt="Amandeep Sodhi"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Amandeep Sodhi</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Brampton Centre, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/charles-sousa/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#137</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/charles-sousa_wGpsSWP.jpg" alt="Charles Sousa"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Charles Sousa</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Mississauga—Lakeshore, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/jenna-sudds/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#138</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/jenna-sudds_jpHgvDd.jpg" alt="Jenna Sudds"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Jenna Sudds</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Kanata, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/kristina-tesser/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#139</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/kristina-tesser.jpg" alt="Kristina Tesser Derksen"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Kristina Tesser Derksen</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Milton East—Halton Hills South, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/ryan-turnbull/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#140</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/ryan-turnbull_wTpNmo9.jpg" alt="Ryan Turnbull"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Ryan Turnbull</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Whitby, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/rechie-valdez/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#141</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/rechie-valdez_MckgsjI.jpg" alt="Rechie Valdez"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Rechie Valdez</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Mississauga—Streetsville, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/anita-vandenbeld/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#142</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/anita-vandenbeld_g5wGlqD.jpg" alt="Anita Vandenbeld"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Anita Vandenbeld</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Ottawa West—Nepean, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/jean-yip/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#143</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/jean-yip_sjncOhD.jpg" alt="Jean Yip"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Jean Yip</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Scarborough—Agincourt, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/salma-zahid/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#144</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/salma-zahid_YCTfR79.jpg" alt="Salma Zahid"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Salma Zahid</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Scarborough Centre—Don Valley East, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/john-zerucelli/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#145</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/john-zerucelli.jpg" alt="John Zerucelli"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">John Zerucelli</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Etobicoke North, ON</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/kent-macdonald/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#146</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/kent-macdonald.jpg" alt="Kent MacDonald"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Kent MacDonald</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Cardigan, PE</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/bobby-morrissey/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#147</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/bobby-morrissey_ocxYSew.jpg" alt="Bobby Morrissey"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-liberal)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Bobby Morrissey</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-liberal)">
+          Liberal
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Egmont, PE</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/xavier-barsalou-duval/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#148</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/xavier-barsalou-duval_j0aQLOo.jpg" alt="Xavier Barsalou-Duval"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-independent)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Xavier Barsalou-Duval</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-independent)">
+          Bloc
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Pierre-Boucher—Les Patriotes—Verchères, QC</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/mario-beaulieu/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#149</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/mario-beaulieu_TgR3r2y.jpg" alt="Mario Beaulieu"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-independent)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Mario Beaulieu</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-independent)">
+          Bloc
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">La Pointe-de-l&#39;Île, QC</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+  <a href="/politicians/luc-berthold/"
+     class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+
+    
+    <span class="text-sm font-black text-gray-300 w-8 text-right flex-shrink-0">#150</span>
+
+    
+    
+    <img src="https://openparliament.ca/media/polpics/luc-berthold_OGKDLrw.jpg" alt="Luc Berthold"
+         class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2"
+         style="border-color: var(--color-conservative)"
+         onerror="this.style.display='none'">
+    
+
+    
+    <div class="min-w-0 flex-1">
+      <span class="font-semibold text-gray-900 text-sm">Luc Berthold</span>
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-xs font-medium px-1.5 py-0.5 rounded text-white flex-shrink-0"
+              style="background-color: var(--color-conservative)">
+          Conservative
+        </span>
+        
+        <span class="text-xs text-gray-400 truncate">Mégantic—L’Érable—Lotbinière, QC</span>
+        
+      </div>
+    </div>
+
+    
+    <div class="flex-shrink-0 text-right min-w-[100px]">
+      
+        
+          <span class="text-sm font-black text-gray-900">84.1%</span>
+        
+        
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: 100%; background-color: #22C55E;"></div>
+          </div>
+          <span class="text-xs text-gray-400">100th</span>
+        </div>
+        
+      
+    </div>
+
+  </a>
+  
+</div>
+
+
+
+
+<div class="flex justify-between items-center mt-4 gap-2">
+
+  
+  <div class="flex gap-1.5">
+    
+    <a href="/browse/attendance/all/1/" class="text-sm px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-gray-400 transition-colors">« First</a>
+    <a href="/browse/attendance/all/5/" class="text-sm px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-gray-400 transition-colors">‹ Prev</a>
+    
+  </div>
+
+  <span class="text-xs text-gray-400 flex-shrink-0">6 / 14</span>
+
+  
+  <div class="flex gap-1.5">
+    
+    <a href="/browse/attendance/all/7/" class="text-sm px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-gray-400 transition-colors">Next ›</a>
+    <a href="/browse/attendance/all/14/" class="text-sm px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-gray-400 transition-colors">Last »</a>
+    
+  </div>
+
+</div>
+
+
+</div>
+
+
+  </main>
+
+  <footer class="border-t border-gray-200 py-4 text-center text-xs text-gray-400">
+    Data provided by <a href="https://openparliament.ca" class="underline hover:text-gray-600" target="_blank" rel="noopener">openparliament.ca</a>
+  </footer>
+
+  <script>
+    document.addEventListener('click', function(e) {
+      var menu = document.getElementById('browse-menu');
+      if (menu && !menu.contains(e.target)) {
+        var dd = document.getElementById('browse-dropdown');
+        if (dd) dd.classList.add('hidden');
+      }
+    });
+  </script>
+  <script src="/static/js/search.js"></script>
+  
+</body>
+</html>

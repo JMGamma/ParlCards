@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grant Jackson — ParlCards</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            liberal:      '#D71920',
+            conservative: '#1A4782',
+            ndp:          '#F37021',
+            bloc:         '#00B0F0',
+            green:        '#3D9B35',
+            independent:  '#6B7280',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+  <nav class="bg-white border-b border-gray-200 px-4 py-3">
+    <div class="max-w-4xl mx-auto flex items-center gap-4">
+      <a href="/" class="flex items-center gap-2 no-underline flex-shrink-0">
+        <span class="text-2xl font-black tracking-tight text-gray-900">Parl<span class="text-red-600">Cards</span></span>
+      </a>
+      <div class="relative" id="browse-menu">
+        <button onclick="document.getElementById('browse-dropdown').classList.toggle('hidden')"
+                class="text-sm font-semibold text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-1 flex-shrink-0">
+          Browse by metric
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div id="browse-dropdown"
+             class="hidden absolute left-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 z-50 py-1 min-w-[190px]">
+          <a href="/browse/attendance/all/1/"      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Voting Attendance</a>
+          <a href="/browse/party_loyalty/all/1/"   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Party Loyalty</a>
+          <a href="/browse/bills_sponsored/all/1/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Bills Sponsored</a>
+          <a href="/browse/debate_speeches/all/1/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Debate Participation</a>
+        </div>
+      </div>
+      <div class="flex-1 max-w-sm relative">
+        <input
+          type="search"
+          name="q"
+          placeholder="Search by name, riding, or province…"
+          autocomplete="off"
+          class="search-input w-full px-4 py-1.5 text-sm rounded-xl border border-gray-200 focus:border-red-400 focus:outline-none bg-gray-50"
+          data-target="nav-search-results"
+        >
+        <div
+          id="nav-search-results"
+          class="absolute w-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden"
+        ></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
+    
+<div class="max-w-lg mx-auto">
+
+  <!-- Politician header -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4">
+    <div class="flex items-center gap-5">
+      
+      <img
+        src="https://openparliament.ca/media/polpics/grant-jackson.jpg"
+        alt="Grant Jackson"
+        class="w-20 h-20 rounded-full object-cover border-4 flex-shrink-0"
+        style="border-color: var(--color-conservative)"
+        onerror="this.style.display='none'"
+      >
+      
+
+      <div class="min-w-0">
+        <h1 class="text-2xl font-bold text-gray-900 leading-tight">Grant Jackson</h1>
+        <div class="mt-1">
+          <span class="inline-block text-xs font-semibold px-2 py-1 rounded text-white"
+                style="background-color: var(--color-conservative)">
+            Conservative
+          </span>
+        </div>
+        
+        <p class="text-sm text-gray-500 mt-1 truncate">Brandon—Souris, MB</p>
+        
+        <p class="text-xs text-gray-400 mt-0.5">Session 45-1</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metrics card -->
+  
+
+
+<div id="card-metrics" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+
+  
+  
+  <div class="flex items-center gap-2 flex-wrap mb-5">
+    <span class="text-xs font-semibold uppercase tracking-widest text-gray-400 mr-1">Compare to:</span>
+    
+    <button
+      data-group="all"
+      class="text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors
+             
+               bg-gray-900 text-white border-gray-900
+             "
+    >
+      All MPs
+    </button>
+    
+    <button
+      data-group="party"
+      class="text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors
+             
+               bg-white text-gray-500 border-gray-200 hover:border-gray-400
+             "
+    >
+      Conservative
+    </button>
+    
+    <button
+      data-group="government"
+      class="text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors
+             
+               bg-white text-gray-500 border-gray-200 hover:border-gray-400
+             "
+    >
+      Government
+    </button>
+    
+    <button
+      data-group="opposition"
+      class="text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors
+             
+               bg-white text-gray-500 border-gray-200 hover:border-gray-400
+             "
+    >
+      Opposition
+    </button>
+    
+  </div>
+
+  <div class="space-y-6">
+
+    
+    
+<div class="stat-metric" data-metric="attendance" data-unit="%">
+  <div class="flex justify-between items-baseline mb-1">
+    <span class="text-xs font-semibold uppercase tracking-widest text-gray-400">Voting Attendance</span>
+    <span class="text-2xl font-black text-gray-900">
+      
+        84.1<span class="text-sm font-normal text-gray-500 ml-0.5">%</span>
+      
+    </span>
+  </div>
+
+  
+  <p class="text-xs text-gray-400 -mt-1 mb-1">69 of 82 votes this session</p>
+  
+
+  <div class="stat-hist-wrapper">
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <svg viewBox="0 0 200 40" class="w-full" preserveAspectRatio="none" style="height:40px;display:block;">
+      
+        
+        
+        
+        
+        <rect
+          x="0.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="10.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="20.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="30.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="40.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="50.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="60.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="70.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="80.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="90.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="100.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="110.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="120.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="130.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="140.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="150.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="160.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="170.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="180.75"
+          y="36"
+          width="8.5"
+          height="4"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="190.75"
+          y="2"
+          width="8.5"
+          height="38"
+          fill="#22C55E"
+          rx="1.5"
+        />
+      
+    </svg>
+    <div class="flex justify-between text-xs text-gray-400 mt-0.5">
+      <span>0%</span>
+      <span>100th percentile</span>
+      <span>84.1%</span>
+    </div>
+
+  
+  </div>
+
+</div>
+
+
+    
+    
+      
+<div class="stat-metric" data-metric="party_loyalty" data-unit="%">
+  <div class="flex justify-between items-baseline mb-1">
+    <span class="text-xs font-semibold uppercase tracking-widest text-gray-400">Party Loyalty</span>
+    <span class="text-2xl font-black text-gray-900">
+      
+        100.0<span class="text-sm font-normal text-gray-500 ml-0.5">%</span>
+      
+    </span>
+  </div>
+
+  
+  <p class="text-xs text-gray-400 -mt-1 mb-1">Votes with Conservative majority (excl. free votes)</p>
+  
+
+  <div class="stat-hist-wrapper">
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <svg viewBox="0 0 200 40" class="w-full" preserveAspectRatio="none" style="height:40px;display:block;">
+      
+        
+        
+        
+        
+        <rect
+          x="0.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="10.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="20.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="30.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="40.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="50.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="60.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="70.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="80.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="90.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="100.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="110.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="120.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="130.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="140.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="150.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="160.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="170.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="180.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="190.75"
+          y="2"
+          width="8.5"
+          height="38"
+          fill="#22C55E"
+          rx="1.5"
+        />
+      
+    </svg>
+    <div class="flex justify-between text-xs text-gray-400 mt-0.5">
+      <span>0%</span>
+      <span>100th percentile</span>
+      <span>100%</span>
+    </div>
+
+  
+  </div>
+
+</div>
+
+    
+
+    
+    
+<div class="stat-metric" data-metric="bills_sponsored" data-unit="">
+  <div class="flex justify-between items-baseline mb-1">
+    <span class="text-xs font-semibold uppercase tracking-widest text-gray-400">Bills Sponsored</span>
+    <span class="text-2xl font-black text-gray-900">
+      
+        0
+      
+    </span>
+  </div>
+
+  
+  <p class="text-xs text-gray-400 -mt-1 mb-1">this session</p>
+  
+
+  <div class="stat-hist-wrapper">
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <svg viewBox="0 0 200 40" class="w-full" preserveAspectRatio="none" style="height:40px;display:block;">
+      
+        
+        
+        
+        
+        <rect
+          x="0.75"
+          y="2"
+          width="23.5"
+          height="38"
+          fill="#EF4444"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="25.75"
+          y="35"
+          width="23.5"
+          height="5"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="50.75"
+          y="38"
+          width="23.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="75.75"
+          y="38"
+          width="23.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="100.75"
+          y="38"
+          width="23.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="125.75"
+          y="38"
+          width="23.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="150.75"
+          y="38"
+          width="23.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="175.75"
+          y="38"
+          width="23.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+    </svg>
+    <div class="flex justify-between text-xs text-gray-400 mt-0.5">
+      <span>0</span>
+      <span>0th percentile</span>
+      <span>7</span>
+    </div>
+
+  
+  </div>
+
+</div>
+
+
+    
+    
+<div class="stat-metric" data-metric="debate_speeches" data-unit=" speeches">
+  <div class="flex justify-between items-baseline mb-1">
+    <span class="text-xs font-semibold uppercase tracking-widest text-gray-400">Debate Participation</span>
+    <span class="text-2xl font-black text-gray-900">
+      
+        219<span class="text-sm font-normal text-gray-500 ml-0.5"> speeches</span>
+      
+    </span>
+  </div>
+
+  
+  <p class="text-xs text-gray-400 -mt-1 mb-1">recorded in Hansard this session</p>
+  
+
+  <div class="stat-hist-wrapper">
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <svg viewBox="0 0 200 40" class="w-full" preserveAspectRatio="none" style="height:40px;display:block;">
+      
+        
+        
+        
+        
+        <rect
+          x="0.75"
+          y="2"
+          width="8.5"
+          height="38"
+          fill="#F97316"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="10.75"
+          y="25"
+          width="8.5"
+          height="15"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="20.75"
+          y="29"
+          width="8.5"
+          height="11"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="30.75"
+          y="32"
+          width="8.5"
+          height="8"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="40.75"
+          y="34"
+          width="8.5"
+          height="6"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="50.75"
+          y="35"
+          width="8.5"
+          height="5"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="60.75"
+          y="36"
+          width="8.5"
+          height="4"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="70.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="80.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="90.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="100.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="110.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="120.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="130.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="140.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="150.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="160.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="170.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="180.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+        
+        
+        
+        
+        <rect
+          x="190.75"
+          y="38"
+          width="8.5"
+          height="2"
+          fill="#E5E7EB"
+          rx="1.5"
+        />
+      
+    </svg>
+    <div class="flex justify-between text-xs text-gray-400 mt-0.5">
+      <span>25 speeches</span>
+      <span>21st percentile</span>
+      <span>19230 speeches</span>
+    </div>
+
+  
+  </div>
+
+</div>
+
+
+  </div>
+
+  
+
+  
+  <p id="group-footer" class="text-center text-xs text-gray-300 mt-5"
+     data-session="45-1" data-party="Conservative">
+    
+      Ranked against all current MPs · Session 45-1
+    
+  </p>
+  
+
+  
+  <details class="mt-5 pt-4 border-t border-gray-100 group">
+    <summary class="text-xs font-semibold uppercase tracking-widest text-gray-400 cursor-pointer select-none list-none flex items-center justify-between">
+      <span>About these metrics</span>
+      <svg class="w-3.5 h-3.5 text-gray-300 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </summary>
+    <dl class="mt-3 space-y-3">
+      <div>
+        <dt class="text-xs font-semibold text-gray-700">Voting Attendance</dt>
+        <dd class="text-xs text-gray-500 mt-0.5">The percentage of recorded votes in this parliamentary session where the MP cast a Yes or No ballot. Paired votes (a procedural mutual abstention between two MPs from opposing sides) and absences are not counted as attendance.</dd>
+      </div>
+      <div>
+        <dt class="text-xs font-semibold text-gray-700">Party Loyalty</dt>
+        <dd class="text-xs text-gray-500 mt-0.5">How often the MP voted with their party's majority position. Free votes — where the party allowed members to vote their conscience — are excluded. Paired votes are excluded entirely; abstentions count against loyalty.</dd>
+      </div>
+      <div>
+        <dt class="text-xs font-semibold text-gray-700">Bills Sponsored</dt>
+        <dd class="text-xs text-gray-500 mt-0.5">The number of private member's bills introduced by this MP in the current session. Government bills introduced by cabinet ministers on behalf of the Crown are not included.</dd>
+      </div>
+      <div>
+        <dt class="text-xs font-semibold text-gray-700">Debate Participation</dt>
+        <dd class="text-xs text-gray-500 mt-0.5">The number of speeches recorded in Hansard (the official transcript of parliamentary debates) for this session. Includes statements, questions during Question Period, and contributions to debate on legislation.</dd>
+      </div>
+    </dl>
+  </details>
+
+</div>
+  
+  <script id="card-data" type="application/json">{"all": {"distributions": {"attendance": {"buckets": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 3, 3, 2, 3, 5, 29, 292], "hi": 84.1, "lo": 0.0, "mp_bucket": 19}, "bills_sponsored": {"buckets": [286, 40, 6, 6, 1, 0, 0, 1], "hi": 7, "lo": 0, "mp_bucket": 0}, "debate_speeches": {"buckets": [135, 55, 40, 30, 21, 16, 13, 7, 5, 3, 4, 2, 0, 1, 0, 1, 5, 0, 0, 2], "hi": 19230, "lo": 25, "mp_bucket": 0}, "party_loyalty": {"buckets": [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 2, 2, 12, 318], "hi": 100.0, "lo": 0.0, "mp_bucket": 19}}, "percentiles": {"attendance": 100, "bills_sponsored": 0, "debate_speeches": 21, "party_loyalty": 100}}, "government": {"distributions": {"attendance": {"buckets": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 1, 10, 152], "hi": 84.1, "lo": 0.0, "mp_bucket": 19}, "bills_sponsored": {"buckets": [150, 13, 3, 4], "hi": 3, "lo": 0, "mp_bucket": 0}, "debate_speeches": {"buckets": [78, 30, 22, 10, 4, 5, 8, 3, 2, 1, 2, 1, 0, 0, 0, 0, 2, 0, 0, 2], "hi": 19230, "lo": 25, "mp_bucket": 0}, "party_loyalty": {"buckets": [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 164], "hi": 100.0, "lo": 0.0, "mp_bucket": 19}}, "percentiles": {"attendance": 100, "bills_sponsored": 0, "debate_speeches": 29, "party_loyalty": 100}}, "opposition": {"distributions": {"attendance": {"buckets": [1, 0, 0, 0, 0, 0, 0, 2, 1, 1, 0, 1, 1, 0, 0, 4, 4, 15, 29, 112], "hi": 84.1, "lo": 42.7, "mp_bucket": 19}, "bills_sponsored": {"buckets": [137, 27, 3, 2, 1, 0, 0, 1], "hi": 7, "lo": 0, "mp_bucket": 0}, "debate_speeches": {"buckets": [55, 23, 18, 14, 17, 12, 10, 2, 7, 1, 3, 1, 2, 1, 0, 1, 0, 0, 1, 3], "hi": 16346, "lo": 41, "mp_bucket": 0}, "party_loyalty": {"buckets": [1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 3, 2, 6, 6, 13, 136], "hi": 100.0, "lo": 68.1, "mp_bucket": 19}}, "percentiles": {"attendance": 100, "bills_sponsored": 0, "debate_speeches": 12, "party_loyalty": 100}}, "party": {"distributions": {"attendance": {"buckets": [1, 0, 0, 0, 0, 0, 0, 2, 0, 1, 0, 1, 1, 0, 0, 3, 3, 12, 26, 91], "hi": 84.1, "lo": 42.7, "mp_bucket": 19}, "bills_sponsored": {"buckets": [120, 20, 1], "hi": 2, "lo": 0, "mp_bucket": 0}, "debate_speeches": {"buckets": [54, 20, 13, 8, 12, 7, 8, 2, 6, 1, 2, 1, 1, 1, 0, 1, 0, 0, 1, 3], "hi": 16346, "lo": 41, "mp_bucket": 0}, "party_loyalty": {"buckets": [1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 2, 2, 3, 4, 12, 114], "hi": 100.0, "lo": 68.1, "mp_bucket": 19}}, "percentiles": {"attendance": 100, "bills_sponsored": 0, "debate_speeches": 15, "party_loyalty": 100}}}</script>
+  
+
+  <!-- Back link -->
+  <div class="text-center mt-6">
+    <a href="/" class="text-sm text-gray-400 hover:text-gray-600 underline">← Search another MP</a>
+  </div>
+
+</div>
+
+  </main>
+
+  <footer class="border-t border-gray-200 py-4 text-center text-xs text-gray-400">
+    Data provided by <a href="https://openparliament.ca" class="underline hover:text-gray-600" target="_blank" rel="noopener">openparliament.ca</a>
+  </footer>
+
+  <script>
+    document.addEventListener('click', function(e) {
+      var menu = document.getElementById('browse-menu');
+      if (menu && !menu.contains(e.target)) {
+        var dd = document.getElementById('browse-dropdown');
+        if (dd) dd.classList.add('hidden');
+      }
+    });
+  </script>
+  <script src="/static/js/search.js"></script>
+  <script src="/static/js/card.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Cloudflare Pages redirect rules
+# https://developers.cloudflare.com/pages/configuration/redirects/
+
+# /browse/ → default metric/group view
+/browse /browse/attendance/all/1/ 301
+/browse/ /browse/attendance/all/1/ 301
+
+# Clean URLs: strip trailing slash for any path that already has an index.html
+# (Cloudflare Pages handles this automatically, no rule needed)
+
+# 404 — Cloudflare Pages automatically serves 404.html for missing paths
