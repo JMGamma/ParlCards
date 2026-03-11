@@ -10,7 +10,7 @@
 {# Metric tabs — full page nav to update URL and reset page to 1 #}
 <div class="flex flex-wrap gap-2 mb-5">
   {% for m_key, m_meta in metrics_list.items() %}
-  <a href="/browse?metric={{ m_key }}&group={{ group }}"
+  <a href="/browse/{{ m_key }}/{{ group }}/1/"
      class="text-sm px-4 py-2 rounded-full font-semibold border transition-colors
             {% if metric == m_key %}bg-gray-900 text-white border-gray-900
             {% else %}bg-white text-gray-500 border-gray-200 hover:border-gray-400{% endif %}">

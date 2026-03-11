@@ -334,6 +334,45 @@ def compute_percentiles_for_mp_by_group(
     return compute_percentiles_for_mp(slug, filtered_table)
 
 
+def compute_all_groups_for_mp(
+    slug: str,
+    table: dict,
+    mp_party: str,
+    government_party: str,
+) -> dict:
+    """
+    Compute percentiles and distributions for all 4 comparison groups.
+    Returns a dict keyed by group name for embedding in static pages.
+    """
+    result = {}
+    for group in ("all", "party", "government", "opposition"):
+        filtered = filter_table_by_group(slug, table, group, mp_party, government_party)
+        result[group] = {
+            "percentiles": compute_percentiles_for_mp(slug, filtered),
+            "distributions": compute_distributions_for_mp(slug, filtered),
+        }
+    return result
+
+
+def cache_static_card_for_mp(slug: str, session: str, card_data: dict) -> None:
+    """
+    Write static card data (includes by_group variants) to:
+      cache/computed/politicians/{slug}/sessions/{session}_static.json
+    """
+    entry = cache_entry(f"computed/politicians/{slug}/sessions/{session}_static.json")
+    entry.write(card_data, ttl_seconds=settings.ttl_vote_detail)
+
+
+def load_static_card_for_mp(slug: str, session: str) -> dict | None:
+    """
+    Load static card data from:
+      cache/computed/politicians/{slug}/sessions/{session}_static.json
+    Returns None if not found.
+    """
+    entry = cache_entry(f"computed/politicians/{slug}/sessions/{session}_static.json")
+    return entry.read()
+
+
 _INTEGER_METRICS = {"bills_sponsored", "debate_speeches"}
 
 

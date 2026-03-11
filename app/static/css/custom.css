@@ -33,7 +33,8 @@
 }
 
 /* Search dropdown transition */
-#search-results:empty {
+#search-results:empty,
+#nav-search-results:empty {
   display: none;
 }
 

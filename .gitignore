@@ -1,8 +1,19 @@
+# API cache — large and regeneratable, never commit
 /cache/
+
+# Secrets
 .env
+
+# Python
 __pycache__/
 *.pyc
 .venv/
 *.egg-info/
-dist/
 .pytest_cache/
+
+# Dev server log files
+server_out*.txt
+server_err*.txt
+nul
+
+# dist/ is intentionally tracked — Cloudflare Pages serves it directly

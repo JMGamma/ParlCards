@@ -1,17 +1,14 @@
-{# Group filter buttons — inside the HTMX swap target so active state re-renders correctly #}
+{# Group filter buttons — plain links so they work in both static and HTMX contexts #}
 {% set groups = [("all", "All MPs"), ("government", "Government"), ("opposition", "Opposition")] %}
 <div class="flex items-center gap-2 flex-wrap mb-6">
   <span class="text-xs font-semibold uppercase tracking-widest text-gray-400 mr-1">Show:</span>
   {% for g_key, g_label in groups %}
-  <button
-    hx-get="/api/browse?metric={{ metric }}&group={{ g_key }}&page=1"
-    hx-target="#browse-list"
-    hx-swap="innerHTML"
-    class="text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors
-           {% if group == g_key %}bg-gray-900 text-white border-gray-900
-           {% else %}bg-white text-gray-500 border-gray-200 hover:border-gray-400{% endif %}">
+  <a href="/browse/{{ metric }}/{{ g_key }}/1/"
+     class="text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors
+            {% if group == g_key %}bg-gray-900 text-white border-gray-900
+            {% else %}bg-white text-gray-500 border-gray-200 hover:border-gray-400{% endif %}">
     {{ g_label }}
-  </button>
+  </a>
   {% endfor %}
 </div>
 
@@ -27,7 +24,7 @@
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-50">
   {% for row in rows %}
-  <a href="/politicians/{{ row.slug }}"
+  <a href="/politicians/{{ row.slug }}/"
      class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
 
     {# Rank number #}
@@ -86,7 +83,7 @@
   {% endfor %}
 </div>
 
-{# Pagination controls — prev/next + first/last #}
+{# Pagination controls — plain links #}
 {% set btn_class = "text-sm px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-gray-400 transition-colors" %}
 {% set btn_disabled_class = "text-sm px-3 py-2 rounded-xl border border-gray-100 text-gray-300 cursor-default" %}
 <div class="flex justify-between items-center mt-4 gap-2">
@@ -94,12 +91,8 @@
   {# Left side: First + Previous #}
   <div class="flex gap-1.5">
     {% if page > 1 %}
-    <button hx-get="/api/browse?metric={{ metric }}&group={{ group }}&page=1"
-            hx-target="#browse-list" hx-swap="innerHTML"
-            class="{{ btn_class }}">« First</button>
-    <button hx-get="/api/browse?metric={{ metric }}&group={{ group }}&page={{ page - 1 }}"
-            hx-target="#browse-list" hx-swap="innerHTML"
-            class="{{ btn_class }}">‹ Prev</button>
+    <a href="/browse/{{ metric }}/{{ group }}/1/" class="{{ btn_class }}">« First</a>
+    <a href="/browse/{{ metric }}/{{ group }}/{{ page - 1 }}/" class="{{ btn_class }}">‹ Prev</a>
     {% else %}
     <span class="{{ btn_disabled_class }}">« First</span>
     <span class="{{ btn_disabled_class }}">‹ Prev</span>
@@ -111,12 +104,8 @@
   {# Right side: Next + Last #}
   <div class="flex gap-1.5">
     {% if page < total_pages %}
-    <button hx-get="/api/browse?metric={{ metric }}&group={{ group }}&page={{ page + 1 }}"
-            hx-target="#browse-list" hx-swap="innerHTML"
-            class="{{ btn_class }}">Next ›</button>
-    <button hx-get="/api/browse?metric={{ metric }}&group={{ group }}&page={{ total_pages }}"
-            hx-target="#browse-list" hx-swap="innerHTML"
-            class="{{ btn_class }}">Last »</button>
+    <a href="/browse/{{ metric }}/{{ group }}/{{ page + 1 }}/" class="{{ btn_class }}">Next ›</a>
+    <a href="/browse/{{ metric }}/{{ group }}/{{ total_pages }}/" class="{{ btn_class }}">Last »</a>
     {% else %}
     <span class="{{ btn_disabled_class }}">Next ›</span>
     <span class="{{ btn_disabled_class }}">Last »</span>

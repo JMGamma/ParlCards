@@ -5,7 +5,7 @@
 {% block content %}
 <div class="max-w-lg mx-auto">
 
-  <!-- Politician header — renders immediately -->
+  <!-- Politician header -->
   <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4">
     <div class="flex items-center gap-5">
       {% if politician.image %}
@@ -39,15 +39,11 @@
     </div>
   </div>
 
-  <!-- Metrics card — loaded lazily via HTMX -->
-  <div
-    id="card-metrics"
-    hx-get="/api/card/{{ slug }}"
-    hx-trigger="load"
-    hx-swap="outerHTML"
-  >
-    {% include "partials/loading.html" %}
-  </div>
+  <!-- Metrics card -->
+  {% include "partials/card.html" %}
+  {% if by_group_data is defined %}
+  <script id="card-data" type="application/json">{{ by_group_data | tojson }}</script>
+  {% endif %}
 
   <!-- Back link -->
   <div class="text-center mt-6">
@@ -56,3 +52,5 @@
 
 </div>
 {% endblock %}
+
+{% block scripts %}<script src="/static/js/card.js"></script>{% endblock %}

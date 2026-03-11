@@ -21,7 +21,6 @@
       }
     }
   </script>
-  <script src="https://unpkg.com/htmx.org@2.0.4" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/static/css/custom.css">
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -41,10 +40,10 @@
         </button>
         <div id="browse-dropdown"
              class="hidden absolute left-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 z-50 py-1 min-w-[190px]">
-          <a href="/browse?metric=attendance"      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Voting Attendance</a>
-          <a href="/browse?metric=party_loyalty"   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Party Loyalty</a>
-          <a href="/browse?metric=bills_sponsored" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Bills Sponsored</a>
-          <a href="/browse?metric=debate_speeches" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Debate Participation</a>
+          <a href="/browse/attendance/all/1/"      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Voting Attendance</a>
+          <a href="/browse/party_loyalty/all/1/"   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Party Loyalty</a>
+          <a href="/browse/bills_sponsored/all/1/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Bills Sponsored</a>
+          <a href="/browse/debate_speeches/all/1/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Debate Participation</a>
         </div>
       </div>
       <div class="flex-1 max-w-sm relative">
@@ -53,11 +52,8 @@
           name="q"
           placeholder="Search by name, riding, or province…"
           autocomplete="off"
-          class="w-full px-4 py-1.5 text-sm rounded-xl border border-gray-200 focus:border-red-400 focus:outline-none bg-gray-50"
-          hx-get="/search"
-          hx-trigger="keyup changed delay:300ms, search"
-          hx-target="#nav-search-results"
-          hx-swap="innerHTML"
+          class="search-input w-full px-4 py-1.5 text-sm rounded-xl border border-gray-200 focus:border-red-400 focus:outline-none bg-gray-50"
+          data-target="nav-search-results"
         >
         <div
           id="nav-search-results"
@@ -84,5 +80,7 @@
       }
     });
   </script>
+  <script src="/static/js/search.js"></script>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

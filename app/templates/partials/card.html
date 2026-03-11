@@ -14,9 +14,7 @@
     <span class="text-xs font-semibold uppercase tracking-widest text-gray-400 mr-1">Compare to:</span>
     {% for g_key, g_label in groups %}
     <button
-      hx-get="/api/card/{{ politician.slug }}?group={{ g_key }}"
-      hx-target="#card-metrics"
-      hx-swap="outerHTML"
+      data-group="{{ g_key }}"
       class="text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors
              {% if active_group == g_key %}
                bg-gray-900 text-white border-gray-900
@@ -29,6 +27,19 @@
     {% endfor %}
   </div>
 
+  {# Metric visibility toggles — rendered from metric_registry Jinja2 global #}
+  {% if metric_registry is defined %}
+  <div class="flex items-center gap-2 flex-wrap mb-5">
+    <span class="text-xs font-semibold uppercase tracking-widest text-gray-400 mr-1">Show:</span>
+    {% for m in metric_registry %}
+    <button
+      data-toggle-metric="{{ m.key }}"
+      class="text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors bg-gray-800 text-white border-gray-800"
+    >{{ m.short }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   <div class="space-y-6">
 
     {# Voting Attendance #}
@@ -38,7 +49,8 @@
       percentile=percentiles.get("attendance") if rankings_available else none,
       unit="%",
       sublabel=metrics.votes_cast | string + " of " + metrics.total_votes | string + " votes this session",
-      distribution=distributions.get("attendance") if distributions is defined else none
+      distribution=distributions.get("attendance") if distributions is defined else none,
+      metric_key="attendance"
     ) }}
 
     {# Party Loyalty #}
@@ -47,7 +59,8 @@
         label="Party Loyalty",
         display_value="",
         percentile=none,
-        na=true
+        na=true,
+        metric_key="party_loyalty"
       ) }}
     {% else %}
       {{ stat_bar(
@@ -56,7 +69,8 @@
         percentile=percentiles.get("party_loyalty") if rankings_available else none,
         unit="%",
         sublabel="Votes with " + (politician.party or "party") + " majority (excl. free votes)",
-        distribution=distributions.get("party_loyalty") if distributions is defined else none
+        distribution=distributions.get("party_loyalty") if distributions is defined else none,
+        metric_key="party_loyalty"
       ) }}
     {% endif %}
 
@@ -66,7 +80,8 @@
       display_value=metrics.bills_sponsored,
       percentile=percentiles.get("bills_sponsored") if rankings_available else none,
       sublabel="this session",
-      distribution=distributions.get("bills_sponsored") if distributions is defined else none
+      distribution=distributions.get("bills_sponsored") if distributions is defined else none,
+      metric_key="bills_sponsored"
     ) }}
 
     {# Debate Participation #}
@@ -76,7 +91,8 @@
       percentile=percentiles.get("debate_speeches") if rankings_available else none,
       unit=" speeches",
       sublabel="recorded in Hansard this session",
-      distribution=distributions.get("debate_speeches") if distributions is defined else none
+      distribution=distributions.get("debate_speeches") if distributions is defined else none,
+      metric_key="debate_speeches"
     ) }}
 
   </div>
@@ -101,7 +117,8 @@
     Percentile rankings are being computed in the background. Reload in a few minutes.
   </p>
   {% else %}
-  <p class="text-center text-xs text-gray-300 mt-5">
+  <p id="group-footer" class="text-center text-xs text-gray-300 mt-5"
+     data-session="{{ session }}" data-party="{{ politician.party or 'same party' }}">
     {% if active_group == "all" %}
       Ranked against all current MPs · Session {{ session }}
     {% elif active_group == "party" %}

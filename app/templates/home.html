@@ -14,11 +14,8 @@
     name="q"
     placeholder="Search by name, riding, or province…"
     autocomplete="off"
-    class="w-full px-5 py-4 text-lg rounded-2xl border-2 border-gray-200 focus:border-red-400 focus:outline-none shadow-sm bg-white"
-    hx-get="/search"
-    hx-trigger="keyup changed delay:300ms, search"
-    hx-target="#search-results"
-    hx-swap="innerHTML"
+    class="search-input w-full px-5 py-4 text-lg rounded-2xl border-2 border-gray-200 focus:border-red-400 focus:outline-none shadow-sm bg-white"
+    data-target="search-results"
   >
   <div
     id="search-results"
@@ -30,22 +27,22 @@
 <div class="max-w-xl mx-auto mt-2 mb-8">
   <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3 text-center">Browse by metric</p>
   <div class="grid grid-cols-2 gap-3">
-    <a href="/browse?metric=attendance"
+    <a href="/browse/attendance/all/1/"
        class="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 hover:shadow-md hover:border-gray-200 transition-all">
       <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Voting Attendance</p>
       <p class="text-sm text-gray-600">Who shows up to vote?</p>
     </a>
-    <a href="/browse?metric=party_loyalty"
+    <a href="/browse/party_loyalty/all/1/"
        class="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 hover:shadow-md hover:border-gray-200 transition-all">
-      <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Party Loyalty</p>
+      <p class="text-xs font-semibold uppercase tracking-widests text-gray-400 mb-1">Party Loyalty</p>
       <p class="text-sm text-gray-600">Who toes the party line?</p>
     </a>
-    <a href="/browse?metric=bills_sponsored"
+    <a href="/browse/bills_sponsored/all/1/"
        class="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 hover:shadow-md hover:border-gray-200 transition-all">
       <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Bills Sponsored</p>
       <p class="text-sm text-gray-600">Who's introducing legislation?</p>
     </a>
-    <a href="/browse?metric=debate_speeches"
+    <a href="/browse/debate_speeches/all/1/"
        class="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 hover:shadow-md hover:border-gray-200 transition-all">
       <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Debate Participation</p>
       <p class="text-sm text-gray-600">Who's speaking in the House?</p>
